@@ -1,23 +1,56 @@
 import random
+import sqlite3
 import pandas as pd
 import datetime
 
+CARMODELS = ("HATCHBACK", "SEDAN", "SUV")
+PRICE_LESS_THAN_A_WEEK = {"HATCHBACK":30, "SEDAN":50, "SUV":100}
+PRICE_MORE_THAN_A_WEEK = {"HATCHBACK":25, "SEDAN":40, "SUV":90}
+VIP_PRICE = {"HATCHBACK":20, "SEDAN":35, "SUV":80}
+
+def create_db():
+    try:
+        conn = sqlite3.connect('shop.db')
+    except:
+        print("Database is not created")
+
+create_db()
+
 
 class CarRental():
-    
-    """CarRental class to create a rentalshop instance"""
-
-    """Class variables represent the price selection based on number of days and VIP card"""
-    PRICE_LESS_THAN_A_WEEK = {"HATCHBACK":30, "SEDAN":50, "SUV":100}
-    PRICE_MORE_THAN_A_WEEK = {"HATCHBACK":25, "SEDAN":40, "SUV":90}
-    VIP_PRICE = {"HATCHBACK":20, "SEDAN":35, "SUV":80}
   
     def __init__(self):
-        """ constructors"""
-        self.inventory = pd.read_csv("shopinventory.csv") #read shopinventory csv
-        self.customerinfo = pd.read_csv("customerinformation.csv") #read customerinformation csv
+
+        self.inventory = None
+        self.customerinfo = None
         self.bill = 0
+
+    def get_inventory(self):
+        pass
+
+    def update_inventory(self):
+        pass
+
+    def get_customerinfo(self):
+        pass
+
+    def update_customerinfo(self):
+        pass
     
+    def display_stock_and_prices(self):
+        pass
+
+    def generateID(self):
+        pass
+
+    def getcar(self):
+        pass
+
+    def getbill(self):
+        pass
+
+
+
     def display_stock_and_prices(self):
         """ displays currently available car models and prices"""
         
@@ -148,72 +181,74 @@ class CarRental():
             
 class Customer(CarRental):
     """Customer class to create a customer instance"""
-    
-    carmodels = ("HATCHBACK", "SEDAN", "SUV") #class variable
 
     def __init__(self):
-        """constructors"""
-        self.customer_name = ""
-        self.cartype = ""
-        self.period = 0
-        self.customer_ID = 0   
-    
-    def __repr__(self):
-        return self.customer_name
-    
-    def requestcar(self, VIP_card):
-        """takes a request from the customer asking name, cartype, number of days, VIP status"""
+        
+        self.name = ""
+        self.carmodel = ""
+        self.days = 0
+        self.ID = 0
 
-        while True:
-            self.customer_name = input('Please enter your name or (type "cancel" to exit): ').upper()
-            if self.customer_name.upper() == "CANCEL":
-                return None
-            else:
-                if not self.customer_name.replace(" ", "").isalpha():
-                    print("Non alphabet characters are detected. Please try again")
-                    print()
-                    continue
-                    
-            a = True       
-            while a:
-                try:
-                    self.period = int(input('Enter the number of days you would like to rent a car or (type 0 to exit): '))
-                    if self.period == 0:
-                        return None
-                except:
-                    print("Invalid format. Please try again")
-                    print()
-                    continue
-                else:
-                    if self.period > 0:
-                        a = False
-                        while not a:
-                            self.cartype = input('Please enter the car type you want to rent or (type "cancel" to exit): ').upper()
-                            if self.cartype.upper() == "CANCEL":
-                                return None
-                            else:
-                                if self.cartype in Customer.carmodels:
-                                    return self.customer_name, self.cartype, self.period, VIP_card
-                                else:
-                                    print("Please enter the correct car model. Please try again")
-                                    print()
-                                    continue
-                    else:
-                        print("Negative values are not acceptable. Please try again")
-                        print()
-                        continue
-                    
-                    
-    def returncar(self):  
-        """accepts a unique id from the customer"""
+    def requestname(self):
 
         while True:
             try:
-                self.customer_ID = int(input('Please enter your 4-digit customer ID number or (type 0 to exit): '))
-                if self.customer_ID == 0:
+                self.name = input('Please enter your name or (type "cancel" to exit): ').upper()
+                if self.name == 'CANCEL':
                     return None
                 else:
-                    self.customer_ID = str(self.customer_ID)
+                    if not self.name(" ","").isalpha():
+                        print("Non alphabet characters are detected. Please  try again")
+                    else:
+                        return self.name
+            except:
+                print("Non valid characters")
+
+    def requestcarmodel(self):
+
+        while True:
+            try:
+                self.carmodel = input('Please enter the car model or (type "cancel" to exit): ').upper()
+                if self.carmodel == 'CANCEL':
+                    return None
+                else:
+                    if self.carmodel in CARMODELS:
+                        return self.cardmodel
+                    else:
+                        print("Please enter the correct model.")
+                        continue
+            except:
+                print("Non valid characters")
+
+
+    def requestdays(self):
+
+        while True:
+            try:
+                self.days = int(input('Please enter how many days or (type 0 to exit): '))
+                if self.days < 0:
+                    print("No negative value is acceptable.")
+                else:
+                    return self.days
+            except:
+                print("Non char")
+
+    def requestcar(self):
+        name = self.requestname()
+        carmodel = self.requestcarmodel()
+        days = self.requestdays()
+
+        return name, carmodel, days
+
+    def returncar(self):  
+
+        while True:
+            try:
+                self.ID = int(input('Please enter your 4-digit customer ID number or (type 0 to exit): '))
+                if self.ID == 0:
+                    return None
+                else:
+                    self.ID = str(self.customer_ID)
             except:
                 print("Invalid format. Please try again")
                 continue
@@ -223,58 +258,3 @@ class Customer(CarRental):
                     continue
                 else:
                     return int(self.customer_ID)
-                
-class VIP(Customer):
-    """VIP class to create a vip instance"""
-
-    def __init__(self):
-        """constructor"""
-
-        self.VIP_card = "YES"
-        Customer.__init__(self)
-            
-    def requestcar(self, VIP_card):
-        """takes a request from the customer asking name, cartype, number of days, VIP status"""
-        while True:
-            self.customer_name = input('Please enter your name or (type "cancel" to exit): ').upper()
-            if self.customer_name.upper() == "CANCEL":
-                return None
-            else:
-                if not self.customer_name.replace(" ", "").isalpha():
-                    print("Non alphabet characters are detected. Please try again")
-                    print()
-                    continue
-                    
-            a = True       
-            while a:
-                try:
-                    self.period = int(input('Enter the number of days you would like to rent a car or (type 0 to exit): '))
-                    if self.period == 0:
-                        return None
-                except:
-                    print("Invalid format. Please try again")
-                    print()
-                    continue
-                else:
-                    if self.period > 0:
-                        a = False
-                        while not a:
-                            self.cartype = input('Please enter the car type you want to rent or (type "cancel" to exit): ').upper()
-                            if self.cartype.upper() == "CANCEL":
-                                return None
-                            else:
-                                if self.cartype in Customer.carmodels:
-                                    return self.customer_name, self.cartype, self.period, VIP_card
-                                else:
-                                    print("Please enter the correct car model. Please try again")
-                                    print()
-                                    continue
-                    else:
-                        print("Negative values are not acceptable. Please try again")
-                        print()
-                        
-        
-                
-    
-   
-

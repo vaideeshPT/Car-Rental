@@ -1,29 +1,11 @@
-from carshop import CarRental, Customer, VIP
+import carshop
+
+
 
 def main():
-    
-    
-    def check_VIP_status():
-        """function that returns the VIP status of a customer"""
-        VIP_types = ("YES", "NO")
-        
-        while True:
-            try:
-                VIP_status = input('Do you have a VIP loyalty card? If are eligible, type "yes" or else "no" (type "cancel" to exit): ').upper()
-            except:
-                print('Invalid characters found.')
-                print()
-                continue
-            else:
-                if VIP_status in VIP_types:
-                    return VIP_status
-                else:
-                    print('Please type "yes" or "no"')
-                    print()
                     
     rentalshop = CarRental()
     customer = Customer()
-    vipcustomer = VIP()
     
     while True:
         print("""
