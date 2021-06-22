@@ -1,3 +1,0 @@
-Customer_ID,Customer_name,Cartype,Car_rate,Time,Start_Date,End_Date,Period,Total_payment,VIP_card,Status
-7091,VAIDEESH,SUV,90,10:31,2021-03-10,2021-03-20,10,900,NO,Returned
-2512,XGCG,SUV,80,13:17,2021-03-10,2022-06-20,467,37360,YES,Returned
